@@ -27,7 +27,7 @@ class Employee:
         self.last=last
         self.age=age
         self.pay=pay
-        self.email=first+'.'+last+'@gmail.com'
+        #self.email=first+'.'+last+'@gmail.com'
 
         Employee.num_of_emps +=1
 
@@ -35,6 +35,8 @@ class Employee:
     def fullName(self):
 
         return ("{} {}" ).format(self.first,self.last)
+
+    
 
     def apply_raise(self):
         self.pay=int(self.pay*self.raise_amount)
@@ -60,6 +62,29 @@ class Employee:
         else:
             return True
     
+    #sepcial methods 
+    def __repr__(self):
+        return "Employee ('{}' ,'{}','{}','{}')".format(self.first,self.last,self.age,self.pay)
+
+    def __str__(self):
+        return "{},{}".format(self.fullName(),self.email)
+
+    def __add__(self,other):
+
+        return self.pay + other.pay
+
+    def __len__(self):
+
+        return len(self.fullName())
+
+    #decorator
+    Keep using method as an attribute 
+    @property
+    def email(self):
+        return "{}.{}@gmail.com".format(self.first,self.last)
+
+
+    
             
 
 
@@ -77,8 +102,11 @@ class Employee:
 emp_1=Employee('Pramod','Singh',33,35)
 emp_2=Employee('Neha','Ziaan',31,10)
 
-# print(emp_1)
-# print(emp_2)
+print(repr(emp_1))
+print(str(emp_1))
+print(emp_1+ emp_2)
+print(len(emp_1))
+print(emp_1.email)
 
 
 #create instance variable manually
@@ -138,26 +166,63 @@ class Developer(Employee):
 
     raise_amount=1.50
 
-    # To add addtional attributes to the subclass , we need to declare init method specific to sublcass 
-
     def __init__(self,first,last,age,pay,language):
         #let main class handle default arguments
 
-        super().__init__(first,last,age,pay)
-        #Employee.__init__(self,first,last,age,pay)
+        #super().__init__(first,last,age,pay)
+        Employee.__init__(self,first,last,age,pay)
 
-        self.languge=languge
+        self.language=language
 
-    pass
 
+    # To add addtional attributes to the subclass , we need to declare init method specific to sublcass 
+
+    
+    
+    
+
+    
+
+
+class Manager(Employee):
+
+    def __init__(self,first,last,age,pay,employees=None):
+        #let main class handle default arguments
+
+        #super().__init__(first,last,age,pay)
+        Employee.__init__(self,first,last,age,pay)
+
+        if employees==None:
+            self.employees=[]
+        else:
+            self.employees=employees
+
+    def add_employee(self,emp):
+        if emp not in self.employees:
+            self.employees.append(emp)
+    
+    def del_employee(self,emp):
+        if emp  in self.employees:
+            self.employees.remove(emp)
+
+    def print_emp(self):
+        for emp in self.employees:
+            print('---->',emp.fullName())
+
+    
 #print(help(Developer))
 
 
-dev_1=Developer('chenna','P',33,5000,'tableau')
-dev_2=Developer('surya','krishna',30,3000,'python')
-#Chnage in the attribute in subclass , it doesnot effect on the main Employee class
+# dev_1=Developer('chenna','P',33,5000,'tableau')
+# dev_2=Developer('surya','krishna',30,3000,'python')
+# #Chnage in the attribute in subclass , it doesnot effect on the main Employee class
 
-# print(dev_1.pay)
-# dev_1.apply_raise()
-# print(dev_1.pay)
-print(dev_1.languge)
+# # print(dev_1.pay)
+# # dev_1.apply_raise()
+# # print(dev_1.pay)
+# print(dev_1.language)
+
+# mngr_1=Manager('Vijay','Agnee',50,500000,[dev_1])
+
+# mngr_1.add_employee(dev_2)
+# print(mngr_1.print_emp())
